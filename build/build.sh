@@ -72,6 +72,50 @@ if [ ! -f "$PREFIX/lib/libnauty.a" ]; then
     cp nautyW.a "$PREFIX/lib/libnauty.a"
 fi
 
+# --- Build MPFR for Emscripten ---
+MPFR_VERSION="4.2.2"
+
+if [ ! -f "$PREFIX/lib/libmpfr.a" ]; then
+    echo "=== Building MPFR ${MPFR_VERSION} for Emscripten ==="
+    cd "$BUILD_DIR"
+    if [ ! -d "mpfr-${MPFR_VERSION}" ]; then
+        curl -L "https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VERSION}.tar.xz" | tar xJ
+    fi
+    cd "mpfr-${MPFR_VERSION}"
+    emconfigure ./configure \
+        --host=none \
+        --prefix="$PREFIX" \
+        --with-gmp="$PREFIX" \
+        --disable-shared \
+        --enable-static \
+        CC_FOR_BUILD=cc
+    emmake make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+    emmake make install
+fi
+
+# --- Build FLINT for Emscripten ---
+FLINT_VERSION="3.3.1"
+
+if [ ! -f "$PREFIX/lib/libflint.a" ]; then
+    echo "=== Building FLINT ${FLINT_VERSION} for Emscripten ==="
+    cd "$BUILD_DIR"
+    if [ ! -d "flint-${FLINT_VERSION}" ]; then
+        curl -L "https://flintlib.org/download/flint-${FLINT_VERSION}.tar.gz" | tar xz
+    fi
+    cd "flint-${FLINT_VERSION}"
+    # Patch configure to skip assembler label suffix check (not needed with --disable-assembly)
+    sed -i.bak 's/as_fn_error \$? "Cannot determine label suffix"/gmp_cv_asm_lsym_prefix="L"/' configure
+    emconfigure ./configure \
+        --prefix="$PREFIX" \
+        --with-gmp="$PREFIX" \
+        --with-mpfr="$PREFIX" \
+        --enable-static \
+        --disable-shared \
+        --disable-pthread \
+        --disable-assembly
+    emmake make install -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+fi
+
 # --- Build normaliz ---
 echo "=== Building normaliz.wasm ==="
 cd "$BUILD_DIR"
