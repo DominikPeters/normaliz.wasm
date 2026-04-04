@@ -35,11 +35,49 @@ if [ ! -f "$PREFIX/lib/libgmp.a" ]; then
     emmake make install
 fi
 
+# --- Build hash-library (SHA-256) for Emscripten ---
+HASHLIBRARY_VERSION="8"
+
+if [ ! -f "$PREFIX/lib/libsha256.a" ]; then
+    echo "=== Building hash-library for Emscripten ==="
+    cd "$BUILD_DIR"
+    if [ ! -d "hash-library-hash_library_v${HASHLIBRARY_VERSION}" ]; then
+        curl -L "https://github.com/stbrumme/hash-library/archive/hash_library_v${HASHLIBRARY_VERSION}.tar.gz" | tar xz
+    fi
+    cd "hash-library-hash_library_v${HASHLIBRARY_VERSION}"
+    sed -ie 's/endian.h/sys\/types.h/g' sha256.cpp
+    em++ -Wno-deprecated -Wall -pedantic -O3 -funroll-loops -fPIC -c -o libsha256.o sha256.cpp
+    emar rc libsha256.a libsha256.o
+    mkdir -p "$PREFIX/include/hash-library"
+    cp sha256.h "$PREFIX/include/hash-library"
+    cp libsha256.a "$PREFIX/lib/"
+fi
+
+# --- Build nauty for Emscripten ---
+NAUTY_VERSION="2_9_1"
+
+if [ ! -f "$PREFIX/lib/libnauty.a" ]; then
+    echo "=== Building nauty for Emscripten ==="
+    cd "$BUILD_DIR"
+    if [ ! -d "nauty${NAUTY_VERSION}" ]; then
+        curl -L "https://users.cecs.anu.edu.au/~bdm/nauty/nauty${NAUTY_VERSION}.tar.gz" | tar xz
+    fi
+    cd "nauty${NAUTY_VERSION}"
+    # wasm is 32-bit, so we use WORDSIZE=32 (nautyW)
+    emconfigure ./configure --enable-tls
+    emmake make all -j$(nproc 2>/dev/null || sysctl -n hw.ncpu) CFLAGS="-fPIC -O3"
+    mkdir -p "$PREFIX/include/nauty"
+    cp nauty.h "$PREFIX/include/nauty"
+    # wasm32 -> use nautyW.a (32-bit wordsize)
+    cp nautyW.a "$PREFIX/lib/libnauty.a"
+fi
+
 # --- Build normaliz ---
 echo "=== Building normaliz.wasm ==="
 cd "$BUILD_DIR"
 emcmake cmake "$ROOT_DIR" \
     -DCMAKE_PREFIX_PATH="$PREFIX" \
+    -DCMAKE_FIND_ROOT_PATH="$PREFIX" \
     -DGMP_INCLUDE_DIR="$PREFIX/include" \
     -DGMP_LIB="$PREFIX/lib/libgmp.a" \
     -DGMPXX_LIB="$PREFIX/lib/libgmpxx.a"

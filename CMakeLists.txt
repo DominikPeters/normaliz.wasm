@@ -13,6 +13,14 @@ find_path(GMP_INCLUDE_DIR gmp.h REQUIRED)
 find_library(GMP_LIB gmp REQUIRED)
 find_library(GMPXX_LIB gmpxx REQUIRED)
 
+# Optional: nauty (automorphism groups)
+find_library(NAUTY_LIB nauty)
+find_path(NAUTY_INCLUDE_DIR nauty/nauty.h)
+
+# Optional: hash-library (SHA-256)
+find_library(HASHLIBRARY_LIB sha256)
+find_path(HASHLIBRARY_INCLUDE_DIR hash-library/sha256.h)
+
 # Collect libnormaliz sources
 file(GLOB NMZ_LIB_SOURCES ${NMZ_SRC}/libnormaliz/*.cpp)
 
@@ -28,11 +36,30 @@ target_compile_definitions(normaliz_static PUBLIC
     NMZ_DEVELOP
     NDEBUG
 )
+
+if(NAUTY_LIB AND NAUTY_INCLUDE_DIR)
+    target_compile_definitions(normaliz_static PUBLIC NMZ_NAUTY NMZ_NAUTYNAUTY NMZ_NAUTY_TLS)
+    target_include_directories(normaliz_static PUBLIC ${NAUTY_INCLUDE_DIR})
+endif()
+
+if(HASHLIBRARY_LIB AND HASHLIBRARY_INCLUDE_DIR)
+    target_compile_definitions(normaliz_static PUBLIC NMZ_HASHLIBRARY)
+    target_include_directories(normaliz_static PUBLIC ${HASHLIBRARY_INCLUDE_DIR})
+endif()
+
 target_compile_options(normaliz_static PRIVATE -O2)
 
 # Build the normaliz CLI as the wasm entry point
 add_executable(normaliz ${NMZ_SRC}/normaliz.cpp)
-target_link_libraries(normaliz normaliz_static ${GMPXX_LIB} ${GMP_LIB})
+
+set(LINK_LIBS normaliz_static ${GMPXX_LIB} ${GMP_LIB})
+if(NAUTY_LIB)
+    list(APPEND LINK_LIBS ${NAUTY_LIB})
+endif()
+if(HASHLIBRARY_LIB)
+    list(APPEND LINK_LIBS ${HASHLIBRARY_LIB})
+endif()
+target_link_libraries(normaliz ${LINK_LIBS})
 
 if(EMSCRIPTEN)
     set_target_properties(normaliz PROPERTIES
