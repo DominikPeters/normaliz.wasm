@@ -89,6 +89,7 @@ if(EMSCRIPTEN)
             -s ENVIRONMENT='web,node' \
             -s FILESYSTEM=1 \
             -s EXPORTED_RUNTIME_METHODS=['callMain','FS'] \
+            -s EXPORT_ES6=1 \
         "
     )
 endif()

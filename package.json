@@ -1,8 +1,9 @@
 {
   "name": "normaliz.wasm",
   "version": "0.1.0",
+  "type": "module",
   "description": "WebAssembly build of Normaliz",
-  "main": "src/index.js",
+  "exports": "./src/normaliz.js",
   "scripts": {
     "build": "bash build/build.sh"
   },
