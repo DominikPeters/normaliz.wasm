@@ -1,0 +1,15 @@
+{
+  "name": "normaliz.wasm",
+  "version": "0.1.0",
+  "description": "WebAssembly build of Normaliz",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "bash build/build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DominikPeters/normaliz.wasm"
+  },
+  "license": "GPL-2.0-or-later",
+  "keywords": ["normaliz", "wasm", "emscripten", "polytope", "cone", "hilbert"]
+}

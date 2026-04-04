@@ -1,0 +1,3 @@
+[submodule "lib/normaliz"]
+	path = lib/normaliz
+	url = https://github.com/Normaliz/Normaliz.git
