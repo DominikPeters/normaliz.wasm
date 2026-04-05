@@ -91,7 +91,7 @@ if [ ! -f "$PREFIX/lib/libmpfr.a" ]; then
     echo "=== Building MPFR ${MPFR_VERSION} for Emscripten ==="
     cd "$BUILD_DIR"
     if [ ! -d "mpfr-${MPFR_VERSION}" ]; then
-        curl -L "https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VERSION}.tar.xz" | tar xJ
+        curl -L "https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.xz" | tar xJ
     fi
     cd "mpfr-${MPFR_VERSION}"
     emconfigure ./configure \
