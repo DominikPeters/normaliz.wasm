@@ -1,0 +1,44 @@
+This project bundles the following third-party libraries, compiled to
+WebAssembly and statically linked into the distributed binary.
+
+==============================================================================
+Normaliz
+https://github.com/Normaliz/Normaliz
+Copyright (C) The Normaliz Team
+License: GPL-3.0-or-later
+
+==============================================================================
+GMP (GNU Multiple Precision Arithmetic Library)
+https://gmplib.org/
+Copyright (C) Free Software Foundation, Inc.
+License: LGPL-3.0-or-later / GPL-2.0-or-later (dual-licensed)
+
+==============================================================================
+MPFR (GNU Multiple Precision Floating-Point Reliable Library)
+https://www.mpfr.org/
+Copyright (C) Free Software Foundation, Inc.
+License: LGPL-3.0-or-later
+
+==============================================================================
+FLINT (Fast Library for Number Theory)
+https://flintlib.org/
+Copyright (C) William Hart, Fredrik Johansson, and others
+License: LGPL-3.0-or-later
+
+==============================================================================
+nauty and Traces
+https://pallini.di.uniroma1.it/
+Copyright (C) Brendan McKay (1984-)
+  traces.h, traces.c, dretodot.c: Copyright (C) Adolfo Piperno (2008-)
+  watercluster2.c, genposetg.c: Copyright (C) Gunnar Brinkmann (2009-)
+  planarity.h, planarity.c: Copyright (C) Magma project
+  nautycliquer.h, nautycliquer.c: Copyright (C) Sampo Niskanen, Patric Ostergard
+  nauchromatic.c: Copyright (C) Gordon Royle (portions)
+  nausha.c: public domain (Brad Conte)
+License: Apache-2.0
+
+==============================================================================
+hash-library
+https://github.com/stbrumme/hash-library
+Copyright (C) 2014, 2015 Stephan Brumme
+License: Zlib

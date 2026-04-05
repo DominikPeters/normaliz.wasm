@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "type": "module",
   "description": "WebAssembly build of Normaliz",
-  "exports": "./src/normaliz.js",
+  "exports": {
+    ".": "./src/normaliz.js",
+    "./dist/normaliz.js": "./dist/normaliz.js"
+  },
+  "files": [
+    "src/",
+    "dist/"
+  ],
   "scripts": {
     "build": "bash build/build.sh"
   },
@@ -11,6 +18,6 @@
     "type": "git",
     "url": "https://github.com/DominikPeters/normaliz.wasm"
   },
-  "license": "GPL-2.0-or-later",
+  "license": "GPL-3.0-or-later",
   "keywords": ["normaliz", "wasm", "emscripten", "polytope", "cone", "hilbert"]
 }

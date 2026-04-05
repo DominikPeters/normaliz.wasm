@@ -1,10 +1,7 @@
 node_modules/
 dist/
-*.o
-*.a
-*.wasm
-*.js.mem
-build/CMakeFiles/
-build/CMakeCache.txt
-build/cmake_install.cmake
-build/Makefile
+build/wasm/
+build/deps/
+web/normaliz.js
+web/normaliz.wasm
+.claude/
