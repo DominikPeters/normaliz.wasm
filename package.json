@@ -1,6 +1,6 @@
 {
   "name": "normaliz.wasm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "WebAssembly build of Normaliz",
   "exports": {
