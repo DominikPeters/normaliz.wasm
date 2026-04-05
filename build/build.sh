@@ -20,7 +20,8 @@ if [ ! -f "$PREFIX/lib/libgmp.a" ]; then
     echo "=== Building GMP ${GMP_VERSION} for Emscripten ==="
     cd "$BUILD_DIR"
     if [ ! -d "$GMP_DIR" ]; then
-        curl -L "https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.xz" | tar xJ
+        (curl -fL "https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.xz" \
+         || curl -fL "https://ftpmirror.gnu.org/gmp/gmp-${GMP_VERSION}.tar.xz") | tar xJ
     fi
     cd "$GMP_DIR"
     emconfigure ./configure \
