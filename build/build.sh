@@ -64,7 +64,19 @@ if [ ! -f "$PREFIX/lib/libnauty.a" ]; then
     fi
     cd "nauty${NAUTY_VERSION}"
     # wasm is 32-bit, so we use WORDSIZE=32 (nautyW)
-    emconfigure ./configure --host=none --enable-tls
+    # Patch configure.ac: add cross-compile fallback (4th arg) to the two AC_RUN_IFELSE
+    # calls that test for popcnt/bmi CPU features. Without this, configure errors out
+    # when cross-compiling because it can't run the test binaries.
+    sed -i.bak '/AC_RUN_IFELSE.*__builtin_cpu_supports("popcnt")/{
+        N
+        s/.*/AC_RUN_IFELSE([AC_LANG_PROGRAM([],[[if (__builtin_cpu_supports("popcnt")) return 0; else return 1;]])],\n  popsup=1,popsup=0,popsup=0)/
+    }' configure.ac
+    sed -i.bak '/AC_RUN_IFELSE.*__builtin_cpu_supports("bmi")/{
+        N
+        s/.*/AC_RUN_IFELSE([AC_LANG_PROGRAM([],[[if (__builtin_cpu_supports("bmi")) return 0; else return 1;]])],\n  lzsup=1,lzsup=0,lzsup=0)/
+    }' configure.ac
+    autoconf
+    emconfigure ./configure --host=none --enable-tls --disable-popcnt --disable-clz --enable-generic
     emmake make all -j$(nproc 2>/dev/null || sysctl -n hw.ncpu) CFLAGS="-fPIC -O3"
     mkdir -p "$PREFIX/include/nauty"
     cp nauty.h "$PREFIX/include/nauty"
@@ -106,6 +118,7 @@ if [ ! -f "$PREFIX/lib/libflint.a" ]; then
     # Patch configure to skip assembler label suffix check (not needed with --disable-assembly)
     sed -i.bak 's/as_fn_error \$? "Cannot determine label suffix"/gmp_cv_asm_lsym_prefix="L"/' configure
     emconfigure ./configure \
+        --host=none \
         --prefix="$PREFIX" \
         --with-gmp="$PREFIX" \
         --with-mpfr="$PREFIX" \
