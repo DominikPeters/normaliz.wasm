@@ -64,7 +64,7 @@ if [ ! -f "$PREFIX/lib/libnauty.a" ]; then
     fi
     cd "nauty${NAUTY_VERSION}"
     # wasm is 32-bit, so we use WORDSIZE=32 (nautyW)
-    emconfigure ./configure --enable-tls
+    emconfigure ./configure --host=none --enable-tls
     emmake make all -j$(nproc 2>/dev/null || sysctl -n hw.ncpu) CFLAGS="-fPIC -O3"
     mkdir -p "$PREFIX/include/nauty"
     cp nauty.h "$PREFIX/include/nauty"
