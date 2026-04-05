@@ -12,6 +12,8 @@
 
 import createNormaliz from './normaliz.js';
 
+const WASM_VERSION = '__WASM_HASH__';
+
 const OUTPUT_EXTENSIONS = [
     'out', 'gen', 'egn', 'esp', 'ext', 'typ',
     'lat', 'cst', 'inv', 'tri', 'ht1', 'dec',
@@ -29,6 +31,12 @@ function isRuntimeNoise(line) {
 
 async function init() {
     module = await createNormaliz({
+        locateFile: (path) => {
+            if (path.endsWith('.wasm') && WASM_VERSION !== '__WASM_HASH__') {
+                return path + '?v=' + WASM_VERSION;
+            }
+            return path;
+        },
         print: (line) => {
             if (!isRuntimeNoise(line)) postMessage({ type: 'stdout', line });
         },

@@ -86,7 +86,7 @@ if(EMSCRIPTEN)
             -s EXPORT_NAME='createNormaliz' \
             -s INVOKE_RUN=0 \
             -s EXIT_RUNTIME=0 \
-            -s ENVIRONMENT='web,node' \
+            -s ENVIRONMENT='web,worker,node' \
             -s FILESYSTEM=1 \
             -s EXPORTED_RUNTIME_METHODS=['callMain','FS'] \
             -s EXPORT_ES6=1 \

@@ -143,4 +143,8 @@ emmake make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
 # Copy output to dist/
 cp normaliz.js normaliz.wasm "$DIST_DIR/"
 
-echo "=== Done! Output in dist/ ==="
+# Copy to web/ for local testing
+cp "$DIST_DIR/normaliz.js" "$DIST_DIR/normaliz.wasm" "$ROOT_DIR/web/"
+
+
+echo "=== Done! Output in dist/ and web/ ==="

@@ -37,8 +37,11 @@ jobs:
       - name: Build WASM
         run: npm run build
 
-      - name: Copy dist to web
-        run: cp dist/normaliz.js dist/normaliz.wasm web/
+      - name: Copy dist to web and stamp cache-busting hash
+        run: |
+          cp dist/normaliz.js dist/normaliz.wasm web/
+          WASM_HASH=$(sha256sum dist/normaliz.wasm | cut -c1-8)
+          sed -i "s/__WASM_HASH__/$WASM_HASH/" web/worker.js
 
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
