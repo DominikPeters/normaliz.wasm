@@ -1,6 +1,6 @@
 {
   "name": "normaliz.wasm",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "WebAssembly build of Normaliz",
   "exports": {
@@ -19,5 +19,12 @@
     "url": "https://github.com/DominikPeters/normaliz.wasm"
   },
   "license": "GPL-3.0-or-later",
-  "keywords": ["normaliz", "wasm", "emscripten", "polytope", "cone", "hilbert"]
+  "keywords": [
+    "normaliz",
+    "wasm",
+    "emscripten",
+    "polytope",
+    "cone",
+    "hilbert"
+  ]
 }
